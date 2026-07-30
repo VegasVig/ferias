@@ -1,4 +1,4 @@
-<style>
+
 /* ═══════════════ TOKENS ═══════════════ */
 :root{
   --ink:#07080A; --ink2:#0C0E12; --ink3:#12151A;
@@ -358,4 +358,4 @@ select option{background:#12151A;color:var(--silver)}
   .tbl tbody td,.bar-k,.kpi-lbl,.hl-lbl{color:#222 !important}
   .panel{display:block !important}
 }
-</style>
+

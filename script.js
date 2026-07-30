@@ -1,9 +1,9 @@
-<script>
+
 (function(){
 'use strict';
 
        
-const API_URL = 'https://script.google.com/macros/s/AKfycbw4jrZND7JY_N5WpFD6WjovGyYyRjfbttI-zVO0sDy8g_IKGaV6LOv8iZNHJgxef7Zmow/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbw5H0MjZB5WHh2jDXVe_2vj7vCja9fGyyD4WyYzojHIV6DRb9_D2aSpfSMRvIppfNyG7g/exec';
 const MODO = (typeof google !== 'undefined' && google.script && google.script.run) ? 'gas' : 'web';
 
 function call(action, payload){
@@ -729,4 +729,3 @@ $('#btnPrint').addEventListener('click', function(){ window.print(); });
 view('viewForm');
 
 })();
-</script>
