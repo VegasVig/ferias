@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<base target="_top">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vegas Vigilância · Preferência de Férias</title>
@@ -9,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<?!= include('style'); ?>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -35,7 +34,7 @@
     <h1 class="display">Solicitação de<br><em>preferência de férias</em></h1>
     <p class="lede">Preencha as informações abaixo indicando sua preferência de meses para férias.
       A empresa fará o possível para atender sua solicitação.</p>
-      <p>Este link funcionará até 5 de Janeiro que é o prazo pra pedir as férias do ano de 2027 </p>
+    <p class="prazo"><i class="fa-regular fa-clock"></i> Este link funciona até <b>5 de janeiro</b>, prazo para pedir as férias de <b>2027</b>.</p>
   </section>
 
   <form id="formFerias" class="stack" novalidate>
@@ -303,7 +302,46 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-<script>window.BOOT = <?!= BOOT ?>;</script>
-<?!= include('script'); ?>
+<script>
+window.BOOT = {
+  "logo": "assets/logovegas.png",
+  "ano": 2027,
+  "cidades": [
+    "Volta Redonda",
+    "Barra Mansa",
+    "Resende",
+    "Três Rios",
+    "Nova Iguaçu",
+    "Queimados",
+    "Miguel Pereira",
+    "Valença",
+    "Porto Real",
+    "Sapucaia",
+    "Pinheiral",
+    "Piraí"
+  ],
+  "meses": [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro"
+  ],
+  "status": [
+    "Pendente",
+    "Em análise",
+    "Aprovada",
+    "Não atendida"
+  ]
+};
+</script>
+<script src="script.js"></script>
 </body>
 </html>
