@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vegas Vigilância · Preferência de Férias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<?!= include('style'); ?>
+</head>
+<body>
+
+<div class="scanlines" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <img id="logo" alt="Vegas Vigilância e Segurança" class="brand-logo">
+    <span class="brand-rule" aria-hidden="true"></span>
+    <span class="brand-tag">Recursos Humanos</span>
+  </div>
+  <div class="topbar-actions">
+    <button id="btnAreaRh" class="btn btn-ghost"><i class="fa-solid fa-shield-halved"></i><span>Área do RH</span></button>
+    <button id="btnVoltar" class="btn btn-ghost hidden"><i class="fa-solid fa-arrow-left"></i><span>Formulário</span></button>
+    <button id="btnSair" class="btn btn-ghost hidden"><i class="fa-solid fa-power-off"></i><span>Encerrar sessão</span></button>
+  </div>
+</header>
+
+<!-- ══════════════════════════ 1. FORMULÁRIO ══════════════════════════ -->
+<main id="viewForm" class="view">
+  <section class="hero">
+    <p class="eyebrow"><span class="dot"></span> Ciclo de férias <b id="heroAno">—</b> · Vegas Vigilância e Segurança</p>
+    <h1 class="display">Solicitação de<br><em>preferência de férias</em></h1>
+    <p class="lede">Preencha as informações abaixo indicando sua preferência de meses para férias.
+      A empresa fará o possível para atender sua solicitação.</p>
+      <p>Este link funcionará até 5 de Janeiro que é o prazo pra pedir as férias do ano de 2027 </p>
+  </section>
+
+  <form id="formFerias" class="stack" novalidate>
+
+    <fieldset class="card">
+      <legend class="step"><span class="step-n">01</span> Identificação</legend>
+      <div class="grid-2">
+        <label class="field span-2">
+          <span class="lbl">Nome completo</span>
+          <input id="nome" name="nome" type="text" autocomplete="name" placeholder="Como consta no seu registro" required>
+          <em class="hint"></em>
+        </label>
+        <label class="field">
+          <span class="lbl">CPF</span>
+          <input id="cpf" name="cpf" type="text" inputmode="numeric" class="mono" placeholder="000.000.000-00" maxlength="14" required>
+          <em class="hint"></em>
+        </label>
+        <label class="field">
+          <span class="lbl">Cargo</span>
+          <input id="cargo" name="cargo" type="text" placeholder="Ex.: Vigilante" required>
+          <em class="hint"></em>
+        </label>
+        <label class="field span-2">
+          <span class="lbl">Unidade / cidade</span>
+          <div class="select-wrap">
+            <select id="cidade" name="cidade" required><option value="">Selecione a sua unidade</option></select>
+            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          </div>
+          <em class="hint"></em>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset class="card">
+      <legend class="step"><span class="step-n">02</span> Preferência de meses</legend>
+      <p class="card-note">Toque em três meses na ordem da sua preferência. O primeiro toque marca a
+        <b>1ª opção</b>, o segundo a <b>2ª</b> e o terceiro a <b>3ª</b>. Toque novamente para desmarcar.</p>
+
+      <div id="gradeMeses" class="months" role="group" aria-label="Escolha três meses em ordem de preferência"></div>
+
+      <div class="ranking" aria-live="polite">
+        <div class="rank-slot" data-slot="1"><span class="rank-n">1ª</span><span class="rank-v">—</span></div>
+        <div class="rank-slot" data-slot="2"><span class="rank-n">2ª</span><span class="rank-v">—</span></div>
+        <div class="rank-slot" data-slot="3"><span class="rank-n">3ª</span><span class="rank-v">—</span></div>
+      </div>
+      <em id="hintMeses" class="hint"></em>
+
+      <!-- fallback acessível / compatibilidade -->
+      <noscript><p class="card-note">Ative o JavaScript para escolher os meses.</p></noscript>
+    </fieldset>
+
+    <fieldset class="card">
+      <legend class="step"><span class="step-n">03</span> Observações e assinatura</legend>
+      <div class="grid-2 align-start">
+        <label class="field">
+          <span class="lbl">Observações <small>(opcional)</small></span>
+          <textarea id="observacoes" rows="7" maxlength="900" placeholder="Algo que o RH precise considerar? Ex.: escala, período específico, motivo pessoal."></textarea>
+          <em class="hint"><span id="contObs">0</span>/900</em>
+        </label>
+        <div class="field">
+          <span class="lbl">Assinatura digital</span>
+          <div class="sign">
+            <canvas id="canvasAssinatura" aria-label="Área de assinatura"></canvas>
+            <span class="sign-line" aria-hidden="true"></span>
+            <span class="sign-ph" id="signPh">Assine aqui com o dedo ou o mouse</span>
+          </div>
+          <div class="sign-actions">
+            <button type="button" id="btnLimparAssinatura" class="btn btn-line"><i class="fa-solid fa-eraser"></i> Limpar assinatura</button>
+          </div>
+          <em class="hint" id="hintAssinatura"></em>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="submit-bar">
+      <p class="submit-note">Ao enviar, seus dados vão direto para o RH da Vegas Vigilância.</p>
+      <button type="submit" id="btnEnviar" class="btn btn-primary btn-lg">
+        <i class="fa-solid fa-paper-plane"></i> Enviar solicitação
+      </button>
+    </div>
+  </form>
+</main>
+
+<!-- ══════════════════════════ 2. CONFIRMAÇÃO ══════════════════════════ -->
+<section id="viewOk" class="view hidden">
+  <div class="card confirm">
+    <div class="confirm-mark"><i class="fa-solid fa-check"></i></div>
+    <h2 class="display">Solicitação enviada com sucesso!</h2>
+    <p class="confirm-proto">Protocolo <b id="okProtocolo" class="mono">—</b> · <span id="okData" class="mono">—</span></p>
+    <p class="lede">Obrigado por preencher sua preferência de férias. A equipe de Recursos Humanos fará o
+      possível para atender sua solicitação no mês desejado. Em caso de necessidade entraremos em contato.</p>
+    <p class="confirm-thanks">Obrigado pela colaboração.</p>
+    <div id="okResumo" class="ranking"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ 3. LOGIN RH ══════════════════════════ -->
+<section id="viewLogin" class="view hidden">
+  <form id="formLogin" class="card login">
+    <i class="fa-solid fa-shield-halved login-icon" aria-hidden="true"></i>
+    <h2 class="display">Área do RH</h2>
+    <p class="card-note">Acesso restrito à equipe de Recursos Humanos.</p>
+    <label class="field">
+      <span class="lbl">Senha</span>
+      <div class="pw">
+        <input id="senha" type="password" autocomplete="current-password" placeholder="••••••••" required>
+        <button type="button" id="btnVerSenha" class="pw-eye" aria-label="Mostrar senha"><i class="fa-solid fa-eye"></i></button>
+      </div>
+      <em class="hint" id="hintLogin"></em>
+    </label>
+    <button type="submit" class="btn btn-primary btn-lg full"><i class="fa-solid fa-unlock"></i> Entrar</button>
+  </form>
+</section>
+
+<!-- ══════════════════════════ 4. DASHBOARD ══════════════════════════ -->
+<section id="viewDash" class="view hidden">
+  <div class="dash">
+    <aside class="side">
+      <nav class="side-nav">
+        <button class="side-item is-active" data-panel="painel"><i class="fa-solid fa-gauge-high"></i><span>Visão geral</span></button>
+        <button class="side-item" data-panel="lista"><i class="fa-solid fa-table-list"></i><span>Solicitações</span></button>
+        <button class="side-item" data-panel="graficos"><i class="fa-solid fa-chart-column"></i><span>Gráficos</span></button>
+        <button class="side-item" data-panel="stats"><i class="fa-solid fa-award"></i><span>Destaques</span></button>
+      </nav>
+      <div class="side-foot">
+        <button id="btnRecarregar" class="btn btn-line full"><i class="fa-solid fa-rotate"></i> Atualizar dados</button>
+        <p class="side-meta">Sessão expira em <span id="sessaoMin">90</span> min</p>
+      </div>
+    </aside>
+
+    <div class="dash-main">
+
+      <div class="dash-head">
+        <div>
+          <p class="eyebrow"><span class="dot"></span> Painel de férias <b id="dashAno">—</b></p>
+          <h2 class="display sm">Preferências recebidas</h2>
+        </div>
+        <div class="dash-export">
+          <button id="btnPdf" class="btn btn-line"><i class="fa-solid fa-file-pdf"></i> Exportar PDF</button>
+          <button id="btnXls" class="btn btn-line"><i class="fa-solid fa-file-excel"></i> Exportar Excel</button>
+          <button id="btnPrint" class="btn btn-line"><i class="fa-solid fa-print"></i> Imprimir</button>
+        </div>
+      </div>
+
+      <!-- cards -->
+      <div class="kpis">
+        <article class="kpi"><span class="kpi-lbl">Total de solicitações</span><b id="kTotal" class="kpi-v">0</b></article>
+        <article class="kpi is-pend"><span class="kpi-lbl">Pendentes</span><b id="kPend" class="kpi-v">0</b></article>
+        <article class="kpi is-analise"><span class="kpi-lbl">Em análise</span><b id="kAnalise" class="kpi-v">0</b></article>
+        <article class="kpi is-ok"><span class="kpi-lbl">Atendidas</span><b id="kOk" class="kpi-v">0</b></article>
+        <article class="kpi is-no"><span class="kpi-lbl">Não atendidas</span><b id="kNo" class="kpi-v">0</b></article>
+      </div>
+
+      <!-- painel: visão geral -->
+      <div class="panel is-active" data-panel="painel">
+        <div class="grid-2">
+          <div class="card">
+            <h3 class="card-h">Funcionários por cidade</h3>
+            <div id="listaCidades" class="bars"></div>
+          </div>
+          <div class="card">
+            <h3 class="card-h">Funcionários por mês solicitado <small>(1ª opção)</small></h3>
+            <div id="listaMeses" class="bars"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- painel: lista -->
+      <div class="panel" data-panel="lista">
+        <div class="card">
+          <div class="toolbar">
+            <div class="search">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input id="busca" type="search" placeholder="Buscar por nome, CPF, cidade, cargo, mês ou status">
+              <button type="button" id="btnLimparBusca" class="search-x hidden" aria-label="Limpar busca"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <button type="button" id="btnFiltros" class="btn btn-line"><i class="fa-solid fa-sliders"></i> Filtros <span id="badgeFiltros" class="badge hidden">0</span></button>
+          </div>
+
+          <div id="filtros" class="filters hidden">
+            <label class="field"><span class="lbl">Cidade</span><div class="select-wrap"><select id="fCidade"></select><i class="fa-solid fa-chevron-down"></i></div></label>
+            <label class="field"><span class="lbl">Cargo</span><div class="select-wrap"><select id="fCargo"></select><i class="fa-solid fa-chevron-down"></i></div></label>
+            <label class="field"><span class="lbl">Status</span><div class="select-wrap"><select id="fStatus"></select><i class="fa-solid fa-chevron-down"></i></div></label>
+            <label class="field"><span class="lbl">1ª opção</span><div class="select-wrap"><select id="fOp1"></select><i class="fa-solid fa-chevron-down"></i></div></label>
+            <label class="field"><span class="lbl">2ª opção</span><div class="select-wrap"><select id="fOp2"></select><i class="fa-solid fa-chevron-down"></i></div></label>
+            <label class="field"><span class="lbl">3ª opção</span><div class="select-wrap"><select id="fOp3"></select><i class="fa-solid fa-chevron-down"></i></div></label>
+            <label class="field"><span class="lbl">De</span><input id="fDe" type="date"></label>
+            <label class="field"><span class="lbl">Até</span><input id="fAte" type="date"></label>
+            <div class="filters-foot">
+              <span id="resumoFiltro" class="side-meta">—</span>
+              <button type="button" id="btnZerarFiltros" class="btn btn-ghost"><i class="fa-solid fa-rotate-left"></i> Limpar filtros</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="tbl" id="tabela">
+              <thead>
+                <tr>
+                  <th data-sort="nome">Nome</th>
+                  <th data-sort="cpf">CPF</th>
+                  <th data-sort="cidade">Cidade</th>
+                  <th data-sort="cargo">Cargo</th>
+                  <th data-sort="opcao1">1ª</th>
+                  <th data-sort="opcao2">2ª</th>
+                  <th data-sort="opcao3">3ª</th>
+                  <th data-sort="iso">Data</th>
+                  <th data-sort="status">Status</th>
+                  <th class="th-acoes">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="corpoTabela"></tbody>
+            </table>
+            <div id="vazio" class="empty hidden">
+              <i class="fa-regular fa-folder-open"></i>
+              <p>Nenhuma solicitação corresponde à busca. Ajuste os filtros ou limpe a busca.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- painel: gráficos -->
+      <div class="panel" data-panel="graficos">
+        <div class="grid-2">
+          <div class="card"><h3 class="card-h">Quantidade por mês escolhido</h3><div class="chart-box"><canvas id="chMes"></canvas></div></div>
+          <div class="card"><h3 class="card-h">Quantidade por cidade</h3><div class="chart-box"><canvas id="chCidade"></canvas></div></div>
+          <div class="card"><h3 class="card-h">Quantidade por cargo</h3><div class="chart-box"><canvas id="chCargo"></canvas></div></div>
+          <div class="card"><h3 class="card-h">Quantidade por status</h3><div class="chart-box"><canvas id="chStatus"></canvas></div></div>
+        </div>
+      </div>
+
+      <!-- painel: destaques -->
+      <div class="panel" data-panel="stats">
+        <div class="highlights">
+          <article class="hl"><span class="hl-lbl">Mês mais solicitado</span><b id="sMes" class="hl-v">—</b><span id="sMesQ" class="hl-sub">—</span></article>
+          <article class="hl"><span class="hl-lbl">Cidade com mais solicitações</span><b id="sCidade" class="hl-v">—</b><span id="sCidadeQ" class="hl-sub">—</span></article>
+          <article class="hl"><span class="hl-lbl">Cargo com mais pedidos</span><b id="sCargo" class="hl-v">—</b><span id="sCargoQ" class="hl-sub">—</span></article>
+          <article class="hl"><span class="hl-lbl">Última solicitação recebida</span><b id="sUlt" class="hl-v">—</b><span id="sUltQ" class="hl-sub">—</span></article>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ MODAL ══════════════════════════ -->
+<div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+  <div class="modal-bg" data-close></div>
+  <div class="modal-box">
+    <header class="modal-head">
+      <h3 id="modalTitulo" class="display sm">Detalhes da solicitação</h3>
+      <button class="modal-x" data-close aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    </header>
+    <div id="modalCorpo" class="modal-body"></div>
+    <footer id="modalPe" class="modal-foot"></footer>
+  </div>
+</div>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<div id="loader" class="loader hidden">
+  <div class="loader-box"><span class="spin"></span><p id="loaderTxt">Enviando…</p></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script>window.BOOT = <?!= BOOT ?>;</script>
+<?!= include('script'); ?>
+</body>
+</html>
