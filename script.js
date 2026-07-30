@@ -2,8 +2,11 @@
 (function(){
 'use strict';
 
-       
-const API_URL = 'https://script.google.com/macros/s/AKfycbw5H0MjZB5WHh2jDXVe_2vj7vCja9fGyyD4WyYzojHIV6DRb9_D2aSpfSMRvIppfNyG7g/exec';
+/* ═══════════════ 0. PONTE COM O BACKEND ═══════════════
+   Modo GAS  → google.script.run (Web App do Apps Script)
+   Modo WEB  → fetch (frontend hospedado fora, ex.: GitHub Pages)
+   Para o modo WEB, preencha API_URL com a URL /exec da implantação.        */
+const API_URL = '';
 const MODO = (typeof google !== 'undefined' && google.script && google.script.run) ? 'gas' : 'web';
 
 function call(action, payload){
