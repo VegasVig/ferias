@@ -389,11 +389,18 @@ select option{background:#12151A;color:var(--silver)}
   .panel{display:block !important}
 }
 /* aviso de prazo no hero */
-.prazo{display:inline-flex;align-items:center;gap:.5rem;font-size:.84rem;color:var(--silver2);
+.prazo{
+  display:block;
+  width:fit-content;max-width:100%;
+  position:relative;
+  font-size:.84rem;line-height:1.5;color:var(--silver2);
   background:rgba(203,163,58,.09);border:1px solid rgba(203,163,58,.32);
-  border-radius:99px;padding:.45rem .9rem;width:fit-content}
-.prazo i{color:var(--pend);font-size:.8rem}
-.prazo b{color:#fff;font-weight:600}
+  border-radius:var(--r);
+  padding:.55rem .95rem .55rem 2.15rem;
+  text-wrap:pretty;
+}
+.prazo i{color:var(--pend);font-size:.8rem;position:absolute;left:.95rem;top:.78rem}
+.prazo b{color:#fff;font-weight:600;white-space:nowrap}
 </style>
 </head>
 <body>
