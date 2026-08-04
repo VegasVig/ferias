@@ -20,7 +20,7 @@ const HEADERS = [
   'Protocolo','Registro','Ano Ferias','Nome','CPF','Telefone','Cargo',
   'Cidade','Posto','Turno','Admissao',
   '1a Opcao','2a Opcao','3a Opcao','Observacao','Assinatura',
-  'Status','Mes Aprovado','Analisado Por','Data Analise'
+  'Status','Mes Aprovado','Opcao Atendida','Analisado Por','Data Analise','Observacao RH'
 ];
 
 function setup() {
@@ -144,7 +144,7 @@ function criar_(d) {
       String(mesAdm).padStart(2, '0') + '/' + anoAdm,
       d.preferencias[0], d.preferencias[1], d.preferencias[2],
       d.observacao || '', urlAssin,
-      'Pendente', '', '', ''
+      'Pendente', '', '', '', '', ''
     ]);
 
     return { ok: true, protocolo: protocolo, registro: agora };
@@ -194,6 +194,8 @@ function decidir_(d) {
   if (!String(d.analisadoPor || '').trim()) return { ok: false, erro: 'Informe quem está analisando.' };
   if (d.status === 'Aprovada' && !String(d.mesAprovado || '').trim())
     return { ok: false, erro: 'Informe o mês concedido.' };
+  if (d.status === 'Recusada' && String(d.observacaoRh || '').trim().length < 10)
+    return { ok: false, erro: 'Recusa exige justificativa (mínimo 10 caracteres).' };
 
   const lock = LockService.getScriptLock();
   lock.waitLock(30000);
@@ -205,12 +207,23 @@ function decidir_(d) {
     for (var i = 0; i < protos.length; i++) if (String(protos[i][0]) === String(d.protocolo)) { linha = i + 2; break; }
     if (linha < 0) return { ok: false, erro: 'Protocolo não encontrado.' };
 
-    sh.getRange(linha, 17, 1, 4).setValues([[
-      d.status, d.mesAprovado || '', d.analisadoPor,
-      Utilities.formatDate(new Date(), TZ, 'dd/MM/yyyy HH:mm')
+    // 'Opcao Atendida' guarda se foi a 1ª, 2ª, 3ª preferência ou um mês fora da lista.
+    // É o indicador que mostra se o processo está funcionando de verdade.
+    const opcao = opcaoAtendida_(sh, linha, d.mesAprovado);
+    sh.getRange(linha, 17, 1, 6).setValues([[
+      d.status, d.mesAprovado || '', opcao, d.analisadoPor,
+      Utilities.formatDate(new Date(), TZ, 'dd/MM/yyyy HH:mm'),
+      d.observacaoRh || ''
     ]]);
     return { ok: true, protocolo: d.protocolo, status: d.status };
   } finally { lock.releaseLock(); }
+}
+
+function opcaoAtendida_(sh, linha, mes) {
+  if (!mes) return '';
+  const prefs = sh.getRange(linha, 12, 1, 3).getValues()[0].map(function (v) { return String(v).trim(); });
+  const pos = prefs.indexOf(String(mes).trim());
+  return pos >= 0 ? (pos + 1) + 'a opcao' : 'fora da lista';
 }
 
 function listar_() {
@@ -219,7 +232,7 @@ function listar_() {
   const v = sh.getRange(2, 1, sh.getLastRow() - 1, HEADERS.length).getValues();
   const chaves = ['protocolo','registro','anoFerias','nome','cpf','telefone','cargo',
     'cidade','posto','turno','admissao','pref1','pref2','pref3','observacao','assinatura',
-    'status','mesAprovado','analisadoPor','dataAnalise'];
+    'status','mesAprovado','opcaoAtendida','analisadoPor','dataAnalise','observacaoRh'];
   return v.filter(function (r) { return r[0]; }).map(function (r) {
     const o = {};
     chaves.forEach(function (k, i) { o[k] = _txt(r[i]); });

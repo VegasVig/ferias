@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Painel RH — Férias 2027 | Vegas Vigilância</title>
+<link rel="icon" href="assets/logovegas.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --preto:#0A0A0A; --grafite:#1E1E1E; --grafite2:#2A2A2A;
+  --cinza:#8A8A8A; --prata:#C0C0C0; --prata-claro:#E8E8E8;
+  --ok:#3ECF8E; --erro:#E5484D; --alerta:#F5A524; --borda:rgba(192,192,192,.18);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--preto);color:var(--prata-claro);
+  font-family:'Rajdhani',system-ui,sans-serif;font-size:16px}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(1000px 520px at 50% -10%,rgba(192,192,192,.09),transparent 70%),
+  repeating-linear-gradient(0deg,rgba(192,192,192,.03) 0 1px,transparent 1px 46px),
+  repeating-linear-gradient(90deg,rgba(192,192,192,.03) 0 1px,transparent 1px 46px)}
+.wrap{position:relative;z-index:1;max-width:1220px;margin:0 auto;padding:20px 16px 70px}
+h1{font-family:'Orbitron',sans-serif;font-size:20px;letter-spacing:.14em;text-transform:uppercase;margin:12px 0 4px;
+  background:linear-gradient(180deg,#fff,var(--prata) 60%,var(--cinza));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--cinza);font-size:13px;letter-spacing:.2em;text-transform:uppercase}
+.card{background:linear-gradient(180deg,rgba(42,42,42,.55),rgba(30,30,30,.55));border:1px solid var(--borda);
+  border-radius:16px;backdrop-filter:blur(9px)}
+
+#login{min-height:88vh;display:grid;place-items:center}
+#login .box{max-width:400px;width:100%;padding:32px 24px;text-align:center}
+#login img{height:80px;margin-bottom:8px}
+input,select,textarea{width:100%;background:#141414;color:var(--prata-claro);border:1px solid var(--borda);
+  border-radius:10px;padding:11px 12px;font-family:inherit;font-size:15px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--prata);box-shadow:0 0 0 3px rgba(192,192,192,.12)}
+select,option{background-color:#141414;color:var(--prata-claro)}
+textarea{min-height:70px;resize:vertical}
+.bt{padding:12px 16px;border:none;border-radius:10px;cursor:pointer;font-family:'Orbitron',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  background:linear-gradient(180deg,var(--prata-claro),var(--prata) 55%,#9d9d9d);color:#0A0A0A}
+.bt:disabled{opacity:.5;cursor:not-allowed}
+.bt.ghost{background:none;border:1px solid var(--borda);color:var(--prata)}
+.bt.aprova{background:linear-gradient(180deg,#6ee7b7,var(--ok));color:#052e1a}
+.bt.recusa{background:linear-gradient(180deg,#ff9a9d,var(--erro));color:#3a0508}
+.erro{color:#FF9A9D;font-size:14px;margin-top:10px;min-height:18px}
+
+header.topo{display:flex;align-items:center;gap:14px;padding:6px 0 18px;flex-wrap:wrap}
+header.topo img{height:56px}
+header.topo .acoes{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.kpi{padding:15px 14px}
+.kpi .v{font-family:'Orbitron',sans-serif;font-size:26px;color:#fff;line-height:1}
+.kpi .l{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cinza);margin-top:7px}
+.kpi.p .v{color:var(--alerta)} .kpi.a .v{color:var(--ok)} .kpi.r .v{color:#FF9A9D}
+
+.demanda{padding:16px;margin-bottom:16px}
+.demanda h3{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--prata);margin:0 0 4px}
+.demanda .exp{font-size:13px;color:var(--cinza);margin-bottom:14px}
+.barras{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;align-items:end;height:130px}
+@media(max-width:760px){.barras{grid-template-columns:repeat(6,1fr);height:190px}}
+.bar{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;height:100%}
+.bar .col{width:100%;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.bar .p1{background:linear-gradient(180deg,var(--prata-claro),var(--prata));border-radius:3px 3px 0 0;min-height:2px}
+.bar .rest{background:rgba(192,192,192,.22);min-height:0}
+.bar .n{font-family:'Orbitron',sans-serif;font-size:11px;color:#fff}
+.bar .m{font-size:11px;letter-spacing:.06em;color:var(--cinza);text-transform:uppercase}
+.bar.quente .p1{background:linear-gradient(180deg,#ffd08a,var(--alerta))}
+.legenda{display:flex;gap:16px;font-size:12px;color:var(--cinza);margin-top:12px;flex-wrap:wrap}
+.legenda i{font-style:normal;display:flex;align-items:center;gap:6px}
+.legenda i::before{content:'';width:11px;height:11px;border-radius:3px;background:var(--prata)}
+.legenda i.b::before{background:rgba(192,192,192,.22)}
+.legenda i.c::before{background:var(--alerta)}
+
+.filtros{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:10px;padding:14px;margin-bottom:16px}
+
+.item{padding:16px;margin-bottom:12px}
+.item .cab{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.proto{font-family:'Orbitron',sans-serif;font-size:14px;color:#fff;letter-spacing:.06em}
+.tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px;border-radius:99px;border:1px solid}
+.tag.pend{color:var(--alerta);border-color:rgba(245,165,36,.45);background:rgba(245,165,36,.08)}
+.tag.apr{color:var(--ok);border-color:rgba(62,207,142,.45);background:rgba(62,207,142,.08)}
+.tag.rec{color:#FF9A9D;border-color:rgba(229,72,77,.45);background:rgba(229,72,77,.08)}
+.tag.n{color:var(--prata);border-color:var(--borda);background:rgba(0,0,0,.35)}
+.item .quando{margin-left:auto;font-size:13px;color:var(--cinza)}
+.grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:13px 0}
+.dado{font-size:15px}
+.dado b{display:block;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--cinza);margin-bottom:2px;font-weight:600}
+
+.escolhas{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+@media(max-width:620px){.escolhas{grid-template-columns:1fr}}
+.opt{position:relative;border:1px solid var(--borda);border-radius:12px;background:rgba(0,0,0,.32);
+  padding:12px 10px;text-align:left;cursor:pointer;font-family:inherit;color:inherit;transition:.15s}
+.opt:hover{border-color:var(--ok);background:rgba(62,207,142,.09);transform:translateY(-2px)}
+.opt .ord{font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:.14em;color:var(--cinza)}
+.opt .mes{display:block;font-family:'Orbitron',sans-serif;font-size:16px;color:#fff;margin:3px 0 2px}
+.opt .conf{font-size:12px;color:var(--alerta)}
+.opt .conf.livre{color:var(--cinza)}
+.opt.escolhido{border-color:var(--ok);background:rgba(62,207,142,.14)}
+.opt.escolhido::after{content:'✓';position:absolute;top:8px;right:10px;color:var(--ok);font-weight:700}
+
+.concedido{margin-top:12px;padding:12px 14px;border-left:3px solid var(--ok);background:rgba(62,207,142,.07);
+  border-radius:0 10px 10px 0;font-size:15px}
+.concedido.rec{border-color:var(--erro);background:rgba(229,72,77,.07)}
+.concedido .mes{font-family:'Orbitron',sans-serif;font-size:17px;color:#fff}
+.obs{margin-top:10px;padding:10px 12px;border-left:2px solid var(--prata);background:rgba(0,0,0,.3);
+  border-radius:0 9px 9px 0;font-size:14px}
+.assin{margin-top:12px}
+.assin img{height:64px;background:#fff;border-radius:8px;border:1px solid var(--borda);padding:2px}
+.botoes{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.vazio{text-align:center;padding:50px 20px;color:var(--cinza)}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:50;display:none;padding:20px;overflow:auto;backdrop-filter:blur(4px)}
+.modal.on{display:block}
+.modal .box{max-width:480px;margin:24px auto;padding:22px}
+.modal h3{font-family:'Orbitron',sans-serif;font-size:15px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 4px}
+.modal .destaque{font-family:'Orbitron',sans-serif;font-size:22px;color:#fff;margin:12px 0}
+label{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--cinza);margin:14px 0 6px;font-weight:600}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="box card">
+    <img src="assets/logovegas.png" alt="Vegas">
+    <h1>Painel RH — Férias 2027</h1>
+    <div class="sub">Acesso restrito</div>
+    <div style="margin-top:22px">
+      <input type="password" id="senha" placeholder="Senha do painel" autocomplete="current-password">
+      <div class="erro" id="erroLogin"></div>
+      <button class="bt" id="btLogin" style="width:100%;margin-top:8px">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="painel" style="display:none">
+  <header class="topo">
+    <img src="assets/logovegas.png" alt="Vegas">
+    <div>
+      <h1>Painel RH — Férias 2027</h1>
+      <div class="sub" id="atualizado">—</div>
+    </div>
+    <div class="acoes">
+      <button class="bt ghost" id="btRecarregar">Atualizar</button>
+      <button class="bt ghost" id="btCsv">Exportar CSV</button>
+      <button class="bt ghost" id="btSair">Sair</button>
+    </div>
+  </header>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="demanda card">
+    <h3>Demanda por mês — 2027</h3>
+    <div class="exp">Barra clara = pedidos de 1ª opção. Barra escura = mês citado como 2ª ou 3ª.
+      Meses em laranja concentram mais de 20% das primeiras opções.</div>
+    <div class="barras" id="barras"></div>
+    <div class="legenda"><i>1ª opção</i><i class="b">2ª / 3ª opção</i><i class="c">mês disputado</i></div>
+  </div>
+
+  <div class="filtros card">
+    <input id="fBusca" placeholder="Buscar nome, CPF, protocolo, posto...">
+    <select id="fStatus"><option value="">Todas as situações</option><option>Pendente</option><option>Aprovada</option><option>Recusada</option></select>
+    <select id="fCidade"><option value="">Todas as cidades</option></select>
+    <select id="fPosto"><option value="">Todos os postos</option></select>
+    <select id="fTurno"><option value="">Todos os turnos</option></select>
+    <select id="fMes"><option value="">Todos os meses</option></select>
+  </div>
+
+  <div id="lista"></div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="box card">
+    <h3 id="mTitulo">Aprovar férias</h3>
+    <div class="sub" id="mQuem">—</div>
+    <div class="destaque" id="mMes">—</div>
+    <div class="sub" id="mOpcao"></div>
+
+    <div id="mBlocoOutro" style="display:none">
+      <label>Mês concedido</label>
+      <select id="mMesOutro"></select>
+      <div class="sub" style="letter-spacing:0;text-transform:none;margin-top:6px;color:#F7D08A">
+        Este mês não estava entre as 3 preferências. Vai constar como "fora da lista" no relatório.</div>
+    </div>
+
+    <label>Quem está analisando <span style="color:var(--erro)">*</span></label>
+    <input id="mAnalista" placeholder="Seu nome (RH)">
+    <label id="mLabelObs">Observação (opcional)</label>
+    <textarea id="mObs" maxlength="400" placeholder="Condição, ajuste de escala, combinado com o supervisor..."></textarea>
+    <div class="erro" id="mErro"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="bt ghost" id="mCancelar" style="flex:1">Cancelar</button>
+      <button class="bt aprova" id="mConfirmar" style="flex:2">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbx_lg-_FNNYViW7kWblxf_u2dfQtKkVpFPw-SiCttqsBXpHsAUe7BUyEGmewFWb0aHYHQ/exec';
+const ANO = 2027;
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+               'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const ABREV = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+
+const $ = id => document.getElementById(id);
+let SENHA = '', DADOS = [];
+
+/* ── login ── */
+$('btLogin').addEventListener('click', entrar);
+$('senha').addEventListener('keydown', e => { if (e.key === 'Enter') entrar(); });
+
+async function entrar(){
+  const s = $('senha').value.trim();
+  if (!s) return $('erroLogin').textContent = 'Digite a senha.';
+  $('btLogin').disabled = true; $('btLogin').textContent = 'Verificando...'; $('erroLogin').textContent = '';
+  try {
+    const r = await fetch(`${API_URL}?action=listar&senha=${encodeURIComponent(s)}`);
+    const j = await r.json();
+    if (!j.ok) { $('erroLogin').textContent = j.erro || 'Acesso negado.'; return; }
+    SENHA = s; DADOS = j.dados || [];
+    sessionStorage.setItem('vgFeriasSenha', s);
+    $('login').style.display = 'none'; $('painel').style.display = 'block';
+    montarFiltros(); render();
+  } catch(e){ $('erroLogin').textContent = 'Falha de conexão com o servidor.'; }
+  finally { $('btLogin').disabled = false; $('btLogin').textContent = 'Entrar'; }
+}
+(function auto(){ const s = sessionStorage.getItem('vgFeriasSenha'); if (s){ $('senha').value = s; entrar(); } })();
+$('btSair').addEventListener('click', () => { sessionStorage.removeItem('vgFeriasSenha'); location.reload(); });
+
+async function recarregar(){
+  $('btRecarregar').textContent = '...';
+  try {
+    const r = await fetch(`${API_URL}?action=listar&senha=${encodeURIComponent(SENHA)}`);
+    const j = await r.json();
+    if (j.ok){ DADOS = j.dados || []; montarFiltros(); render(); }
+  } catch(e){}
+  $('btRecarregar').textContent = 'Atualizar';
+}
+$('btRecarregar').addEventListener('click', recarregar);
+
+/* ── filtros ── */
+function montarFiltros(){
+  const unico = campo => [...new Set(DADOS.map(d => d[campo]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const preencher = (id, itens, rotulo) => {
+    const atual = $(id).value;
+    $(id).innerHTML = `<option value="">${rotulo}</option>` +
+      itens.map(v => `<option${v===atual?' selected':''}>${esc(v)}</option>`).join('');
+  };
+  preencher('fCidade', unico('cidade'), 'Todas as cidades');
+  preencher('fPosto', unico('posto'), 'Todos os postos');
+  preencher('fTurno', unico('turno'), 'Todos os turnos');
+  preencher('fMes', MESES.map(m => m + '/' + ANO), 'Todos os meses');
+}
+['fBusca','fStatus','fCidade','fPosto','fTurno','fMes'].forEach(id => $(id).addEventListener('input', render));
+
+$('fCidade').addEventListener('change', () => {
+  const c = $('fCidade').value;
+  const postos = [...new Set(DADOS.filter(d => !c || d.cidade === c).map(d => d.posto).filter(Boolean))]
+    .sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  $('fPosto').innerHTML = '<option value="">Todos os postos</option>' + postos.map(p => `<option>${esc(p)}</option>`).join('');
+});
+
+function filtradas(){
+  const q = $('fBusca').value.trim().toLowerCase();
+  const st = $('fStatus').value, cd = $('fCidade').value, po = $('fPosto').value,
+        tu = $('fTurno').value, me = $('fMes').value;
+  return DADOS.filter(d => {
+    if (st && d.status !== st) return false;
+    if (cd && d.cidade !== cd) return false;
+    if (po && d.posto !== po) return false;
+    if (tu && d.turno !== tu) return false;
+    if (me && [d.pref1, d.pref2, d.pref3, d.mesAprovado].indexOf(me) < 0) return false;
+    if (q){
+      const alvo = [d.protocolo,d.nome,d.cpf,d.cargo,d.cidade,d.posto].join(' ').toLowerCase();
+      if (alvo.indexOf(q) < 0) return false;
+    }
+    return true;
+  });
+}
+
+/* ── quantos do MESMO posto já têm aquele mês aprovado ── */
+function aprovadosNoPosto(posto, mes, protocoloIgnorar){
+  return DADOS.filter(d => d.status === 'Aprovada' && d.posto === posto &&
+    d.mesAprovado === mes && d.protocolo !== protocoloIgnorar).length;
+}
+
+/* ── render ── */
+function render(){
+  const L = filtradas();
+  const pend = DADOS.filter(d => d.status === 'Pendente').length;
+  const apr  = DADOS.filter(d => d.status === 'Aprovada');
+  const rec  = DADOS.filter(d => d.status === 'Recusada').length;
+  const na1  = apr.filter(d => d.opcaoAtendida === '1a opcao').length;
+  const taxa = apr.length ? Math.round(na1 / apr.length * 100) : 0;
+
+  $('kpis').innerHTML = [
+    ['','Pedidos recebidos', DADOS.length],
+    ['p','Pendentes', pend],
+    ['a','Aprovados', apr.length],
+    ['r','Recusados', rec],
+    ['','Atendidos na 1ª opção', taxa + '%']
+  ].map(([c,l,v]) => `<div class="kpi card ${c}"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+
+  $('atualizado').textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+
+  desenharDemanda();
+
+  if (!L.length){ $('lista').innerHTML = '<div class="vazio card">Nenhum pedido com esses filtros.</div>'; return; }
+  $('lista').innerHTML = L.map(cardItem).join('');
+
+  document.querySelectorAll('[data-acao]').forEach(b => b.addEventListener('click', () => {
+    abrirModal(b.dataset.proto, b.dataset.acao, b.dataset.mes || '');
+  }));
+}
+
+function desenharDemanda(){
+  const p1 = new Array(12).fill(0), outras = new Array(12).fill(0);
+  DADOS.forEach(d => {
+    [d.pref1, d.pref2, d.pref3].forEach((p, i) => {
+      const idx = MESES.indexOf(String(p).split('/')[0]);
+      if (idx < 0) return;
+      if (i === 0) p1[idx]++; else outras[idx]++;
+    });
+  });
+  const totalP1 = p1.reduce((a,b)=>a+b,0) || 1;
+  const max = Math.max(...p1.map((v,i)=>v+outras[i]), 1);
+  $('barras').innerHTML = p1.map((v,i) => {
+    const t = v + outras[i];
+    const quente = v / totalP1 > 0.20;
+    return `<div class="bar ${quente?'quente':''}" title="${MESES[i]}: ${v} como 1ª opção, ${outras[i]} como 2ª/3ª">
+      <span class="n">${t||''}</span>
+      <div class="col">
+        <div class="rest" style="height:${Math.round(outras[i]/max*100)}%"></div>
+        <div class="p1" style="height:${Math.round(v/max*100)}%"></div>
+      </div>
+      <span class="m">${ABREV[i]}</span></div>`;
+  }).join('');
+}
+
+function tagStatus(s){
+  const c = s === 'Aprovada' ? 'apr' : s === 'Recusada' ? 'rec' : 'pend';
+  return `<span class="tag ${c}">${s}</span>`;
+}
+
+function cardItem(d){
+  const prefs = [d.pref1, d.pref2, d.pref3];
+
+  const escolhas = prefs.map((mes, i) => {
+    if (!mes) return '';
+    const n = aprovadosNoPosto(d.posto, mes, d.protocolo);
+    const jaEste = d.mesAprovado === mes;
+    return `<button class="opt ${jaEste?'escolhido':''}" data-acao="Aprovada" data-proto="${d.protocolo}" data-mes="${esc(mes)}">
+      <span class="ord">${i+1}ª preferência</span>
+      <span class="mes">${esc(mes)}</span>
+      <span class="conf ${n?'':'livre'}">${n ? '⚠ ' + n + ' já aprovado' + (n>1?'s':'') + ' neste posto' : 'nenhum conflito no posto'}</span>
+    </button>`;
+  }).join('');
+
+  const decidido = d.status !== 'Pendente';
+  const bloco = decidido ? `
+    <div class="concedido ${d.status==='Recusada'?'rec':''}">
+      ${d.status === 'Aprovada'
+        ? `Férias concedidas em <span class="mes">${esc(d.mesAprovado)}</span>
+           <span class="tag n" style="margin-left:8px">${esc(d.opcaoAtendida||'')}</span>`
+        : 'Pedido recusado'}
+      <div style="font-size:13px;color:var(--cinza);margin-top:4px">
+        ${esc(d.analisadoPor||'—')} · ${esc(d.dataAnalise||'')}</div>
+    </div>` : '';
+
+  const botoes = `
+    <button class="bt ghost" data-acao="Outro" data-proto="${d.protocolo}">Conceder outro mês</button>
+    <button class="bt recusa" data-acao="Recusada" data-proto="${d.protocolo}">Recusar</button>`;
+
+  return `<div class="item card">
+    <div class="cab">
+      <span class="proto">${d.protocolo}</span>
+      ${tagStatus(d.status)}
+      <span class="tag n">${esc(d.cargo||'')}</span>
+      <span class="quando">${esc(d.registro)}</span>
+    </div>
+
+    <div class="grade">
+      <div class="dado"><b>Colaborador</b>${esc(d.nome)}</div>
+      <div class="dado"><b>CPF</b>${esc(d.cpf)}</div>
+      <div class="dado"><b>Posto</b>${esc(d.posto)}<br><span style="color:var(--cinza);font-size:13px">${esc(d.cidade)}</span></div>
+      <div class="dado"><b>Turno</b>${esc(d.turno)}</div>
+      <div class="dado"><b>Admissão</b>${esc(d.admissao)}</div>
+      <div class="dado"><b>Contato</b>${esc(d.telefone)}</div>
+    </div>
+
+    ${d.observacao ? `<div class="obs"><b style="color:var(--prata)">Colaborador:</b> ${esc(d.observacao)}</div>` : ''}
+    ${d.observacaoRh ? `<div class="obs" style="border-color:var(--alerta)"><b style="color:var(--alerta)">RH:</b> ${esc(d.observacaoRh)}</div>` : ''}
+    ${bloco}
+
+    <div style="margin-top:14px">
+      <b style="display:block;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--cinza);margin-bottom:8px">
+        ${decidido ? 'Alterar decisão — toque no mês a conceder' : 'Marque o mês concedido'}</b>
+      <div class="escolhas">${escolhas}</div>
+    </div>
+
+    ${d.assinatura ? `<div class="assin"><img src="${thumb(d.assinatura)}" alt="assinatura" loading="lazy"></div>` : ''}
+    <div class="botoes">${botoes}</div>
+  </div>`;
+}
+
+function thumb(url){
+  const m = String(url||'').match(/[-\w]{25,}/);
+  return m ? `https://drive.google.com/thumbnail?id=${m[0]}&sz=w600` : '';
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ── modal de decisão ── */
+let atual = { proto:'', status:'', mes:'' };
+
+function abrirModal(proto, acao, mes){
+  const d = DADOS.find(x => x.protocolo === proto); if (!d) return;
+  const outro = acao === 'Outro';
+  atual = { proto, status: outro ? 'Aprovada' : acao, mes };
+
+  $('mQuem').textContent = d.nome + ' · ' + d.posto;
+  $('mErro').textContent = '';
+  $('mObs').value = d.observacaoRh || '';
+  $('mAnalista').value = localStorage.getItem('vgFeriasAnalista') || d.analisadoPor || '';
+
+  if (atual.status === 'Recusada'){
+    $('mTitulo').textContent = 'Recusar pedido';
+    $('mMes').textContent = '—';
+    $('mOpcao').textContent = '';
+    $('mBlocoOutro').style.display = 'none';
+    $('mLabelObs').textContent = 'Justificativa da recusa *';
+    $('mConfirmar').className = 'bt recusa';
+    $('mConfirmar').textContent = 'Recusar';
+  } else if (outro){
+    $('mTitulo').textContent = 'Conceder mês fora da lista';
+    $('mMes').textContent = '—';
+    $('mOpcao').textContent = 'Preferências: ' + [d.pref1,d.pref2,d.pref3].filter(Boolean).join(' · ');
+    $('mMesOutro').innerHTML = MESES.map(m => `<option>${m}/${ANO}</option>`).join('');
+    $('mBlocoOutro').style.display = 'block';
+    $('mLabelObs').textContent = 'Motivo de não atender nenhuma das 3 *';
+    $('mConfirmar').className = 'bt aprova';
+    $('mConfirmar').textContent = 'Conceder';
+  } else {
+    const pos = [d.pref1,d.pref2,d.pref3].indexOf(mes);
+    const n = aprovadosNoPosto(d.posto, mes, proto);
+    $('mTitulo').textContent = 'Aprovar férias';
+    $('mMes').textContent = mes;
+    $('mOpcao').textContent = (pos >= 0 ? (pos+1) + 'ª preferência do colaborador' : 'fora da lista') +
+      (n ? ' · atenção: ' + n + ' já aprovado(s) no mesmo posto neste mês' : '');
+    $('mBlocoOutro').style.display = 'none';
+    $('mLabelObs').textContent = 'Observação (opcional)';
+    $('mConfirmar').className = 'bt aprova';
+    $('mConfirmar').textContent = 'Aprovar';
+  }
+  $('modal').classList.add('on');
+}
+$('mCancelar').addEventListener('click', () => $('modal').classList.remove('on'));
+
+$('mConfirmar').addEventListener('click', async () => {
+  const analista = $('mAnalista').value.trim();
+  const obs = $('mObs').value.trim();
+  const mes = $('mBlocoOutro').style.display === 'block' ? $('mMesOutro').value : atual.mes;
+
+  if (!analista) return $('mErro').textContent = 'Informe quem está analisando.';
+  if (atual.status === 'Aprovada' && !mes) return $('mErro').textContent = 'Selecione o mês concedido.';
+  if (atual.status === 'Recusada' && obs.length < 10) return $('mErro').textContent = 'A recusa precisa de justificativa (mínimo 10 caracteres).';
+  if ($('mBlocoOutro').style.display === 'block' && obs.length < 10)
+    return $('mErro').textContent = 'Explique por que nenhuma das 3 preferências foi atendida.';
+
+  localStorage.setItem('vgFeriasAnalista', analista);
+  const b = $('mConfirmar'); b.disabled = true; const txt = b.textContent; b.textContent = 'Registrando...';
+  try {
+    const r = await fetch(API_URL, {
+      method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({ action:'decidir', senha:SENHA, protocolo:atual.proto,
+        status:atual.status, mesAprovado: atual.status === 'Aprovada' ? mes : '',
+        analisadoPor: analista, observacaoRh: obs })
+    });
+    const j = await r.json();
+    if (!j.ok){ $('mErro').textContent = j.erro || 'Não foi possível registrar.'; return; }
+    $('modal').classList.remove('on');
+    await recarregar();
+  } catch(e){ $('mErro').textContent = 'Falha de conexão.'; }
+  finally { b.disabled = false; b.textContent = txt; }
+});
+
+/* ── CSV ── */
+$('btCsv').addEventListener('click', () => {
+  const cols = ['protocolo','registro','nome','cpf','cargo','cidade','posto','turno','admissao',
+    'pref1','pref2','pref3','observacao','status','mesAprovado','opcaoAtendida','analisadoPor','dataAnalise','observacaoRh'];
+  const L = filtradas();
+  const csv = [cols.join(';')].concat(L.map(d => cols.map(c => `"${String(d[c]||'').replace(/"/g,'""')}"`).join(';'))).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'}));
+  a.download = `ferias-${ANO}-vegas-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+});
+</script>
+</body>
+</html>
