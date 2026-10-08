@@ -6,7 +6,7 @@
    Modo GAS  → google.script.run (Web App do Apps Script)
    Modo WEB  → fetch (frontend hospedado fora, ex.: GitHub Pages)
    Para o modo WEB, preencha API_URL com a URL /exec da implantação.        */
-const API_URL = '';
+const API_URL = 'https://script.google.com/macros/s/AKfycbx_lg-_FNNYViW7kWblxf_u2dfQtKkVpFPw-SiCttqsBXpHsAUe7BUyEGmewFWb0aHYHQ/exec';
 const MODO = (typeof google !== 'undefined' && google.script && google.script.run) ? 'gas' : 'web';
 
 function call(action, payload){
