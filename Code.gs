@@ -12,8 +12,8 @@ const ANO_ESPERADO = 2027;
 
 // prazo oficial (mesmos valores do formulário) — validado também aqui, porque quem
 // souber a URL da API pode postar direto, sem passar pela tela
-const PRAZO_INICIO = '2026-11-01';
-const PRAZO_FIM    = '2026-11-25';
+const PRAZO_INICIO = '2026-10-08';
+const PRAZO_FIM    = '2026-11-20';
 const BLOQUEAR_FORA_DO_PRAZO = false; // vire para true quando publicar
 
 const HEADERS = [
@@ -99,7 +99,7 @@ function criar_(d) {
 
   const hoje = Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd');
   if (BLOQUEAR_FORA_DO_PRAZO && (hoje < PRAZO_INICIO || hoje > PRAZO_FIM))
-    return { ok: false, erro: 'Fora do prazo de preenchimento (01/11/2026 a 25/11/2026).' };
+    return { ok: false, erro: 'Fora do prazo de preenchimento (08/10/2026 a 20/11/2026).' };
 
   // ---------- período aquisitivo: revalidado no servidor ----------
   // fichado no ano anterior ao das férias => só a partir do mês do aniversário de admissão
